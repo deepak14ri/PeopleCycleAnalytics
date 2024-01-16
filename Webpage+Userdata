@@ -1,0 +1,1462 @@
+<!-- Last Update 11-Nov-2023 -->
+<!DOCTYPE html>
+<html style="scroll-behavior: smooth;" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://anheuserbuschinbev.sharepoint.com/:u:/r/sites/zone-europe-people-Talent-Learning/Site/style_dashboard.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <!-- Add SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Add SweetAlert JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    
+       
+</head>
+
+<body>
+    <style>
+      .preloader {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: #000;
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .preloader img {
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+      }
+
+      .mleft-2 {
+        padding-left: 10px;
+      }
+    </style>
+    <script>
+      $(function () {
+        $(document).ready(function () {
+          $(".preloader").fadeOut(1000);
+        });
+      });
+    </script>
+
+    <div
+      class="preloader"
+      id="hideMeAfter4Seconds"
+      style="background: #000 !important"
+    >
+      <img
+        class="preloader-icon"
+        src="https://anheuserbuschinbev.sharepoint.com/:i:/r/sites/zone-europe-people-Talent-Learning/Site/images/loader.gif"
+        alt="My Site Preloader"
+      />
+    </div>
+    
+    <div id="noaccess" style="background-color: #fff">  
+    </div>
+    <div id="centered-content"></div>
+    <section class="bg-black" id="page-content">
+    <main class="bg-black" id="section_id">
+        <div class="container-scroller">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="left_sidebar">
+                        <h1 class="logo">PEOPLE <span>CYCLE</span></h1>
+
+                        <div class="main_menu mt-5">
+                            <h4 class="white mt-4"><i class="fa fa-bar-chart" aria-hidden="true"></i> Analytics
+                                Dashboard
+                            </h4>
+
+                            <div class="tab_btns">
+                                <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen"> Website Analytics</button>
+                                <button class="tablinks" onclick="openCity(event, 'Paris')">Users Data</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="main_section">
+                        <div class="row">
+                            <div class="d-flex space-between align_center">
+                                <div class="flex-item">
+                                    <!-- Optional: Search Form -->
+                                </div>
+                                <div class="flex-item">
+                                    <div class="d-flex gap-20">
+                                        <div class="notification white">
+                                            <i class="fa fa-bell-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="user_data d-flex gap-20">
+                                            <div class="user_img">
+                                                <img src="https://anheuserbuschinbev.sharepoint.com/:i:/r/sites/zone-europe-people-Talent-Learning/Site/images/img_user.png">
+                                            </div>
+                                            <div class="user_email">
+                                                <h5 id="username"></h5>
+                                                <h6 id="email"></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab mt-3">
+                                <div id="London" class="tabcontent">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <!-- Content for Website Analytics -->
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="right_sidebar">
+                                                <!-- Content for right sidebar -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="Paris" class="tabcontent">
+                                    <div class="d-flex space-between" style="max-width: 70%;">
+                                        <!-- Content for Users Data -->
+                                    </div>
+                                    <table class="table table-borderless gfg mt-3 list_dataanalytics">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">User Email</th>
+                                                <th scope="col">Designation</th>
+                                                <th scope="col">Page Name</th>
+                                                <th scope="col">No. of Visits</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="userTableData">
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</section>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js'></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/4.0/1/MicrosoftAjax.js"></script>
+    <script type="text/javascript" src="/_layouts/15/sp.runtime.js"></script>
+    <script type="text/javascript" src="/_layouts/15/sp.js"></script>
+
+    
+<script>
+    $(document).ready(function () {
+           CheckAccess()
+       })
+
+       function CheckAccess(){
+           var currentUserID = _spPageContextInfo.userLoginName;
+   
+
+   // SharePoint site URL and list name
+   var siteUrl = "https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/SitePages/Analytics_dashboard.aspx";
+
+   //var listName = "managers";
+
+   // SharePoint REST API URL to fetch data from the list
+   var apiEndpoint = "https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/GetByTitle('manager_list')/items?$filter=(Title eq '${currentUserID}')";
+   console.log("called",apiEndpoint);
+
+   // Make an HTTP GET request to fetch list data
+   $.ajax({
+       url: apiEndpoint,
+       method: "GET",
+       headers: {
+           "Accept": "application/json; odata=verbose"
+       },
+       success: function (data) {
+           // Check if the current user's ID is in the list with "YES" permission
+           console.log("this is the data :",data);
+
+
+         
+           var items = data.d.results;
+           console.log("items is ",items);
+
+         
+    
+           if(items.length>0){
+               for (var i = 0; i < items.length; i++) {
+               var item = items[i];
+               var accessPermission = item["ApprovalStatus"];
+               console.log("access is",accessPermission) // Replace with the actual column name for Access Permission
+                
+               // Check if the user's ID matches and access permission is "YES"
+               if ( accessPermission === "YES") {
+                  
+                   document.getElementById("page-content").style.display = "block";
+               }else if(accessPermission === "NO"){
+
+                    document.getElementById("page-content").style.display = "none";
+    
+                    var noaccessdiv = document.getElementById("noaccess");
+                    const centeredContainer = document.getElementById("centered-content");
+                
+    
+                // Create and append the paragraphs with the specified text
+                    const paragraph1 = document.createElement("h2");
+                    paragraph1.textContent = "Access Denied: This Webpage is for Managers.";
+                    centeredContainer.appendChild(paragraph1);
+    
+                    const paragraph2 = document.createElement("p");
+                    paragraph2.textContent = "You have previously submitted a request for access; however, regretfully, your request has been declined.";
+                    centeredContainer.appendChild(paragraph2);
+    
+                    centeredContainer.style.margin = "0 auto";
+                    centeredContainer.style.display = "flex";
+                    centeredContainer.style.alignItems = "center";
+                    centeredContainer.style.flexWrap = "wrap";
+                    centeredContainer.style.width = "53%";
+                    centeredContainer.style.lineHeight = "0px";
+                    paragraph2.style.color = "red";
+    
+                    
+                    noaccessdiv.appendChild(centeredContainer);
+    
+                //reason box
+    
+                var reasonInput = document.createElement('textarea');
+                reasonInput.id = 'reasonInput';
+                reasonInput.required = true;
+                reasonInput.style.color = "red";
+                reasonInput.style.marginLeft = '24%';
+                reasonInput.style.marginBottom = '20px';
+                reasonInput.style.borderRadius = '10px';
+                reasonInput.style.width = '100%';
+                reasonInput.style.maxWidth = '52%';
+                reasonInput.style.height = '106px';
+                reasonInput.style.paddingBottom = '74px';
+                reasonInput.style.paddingLeft = '9px';
+                noaccessdiv.appendChild(reasonInput);
+    
+                reasonInput.addEventListener('input', function () {
+                    var reason = reasonInput.value;
+                    updateListItem(itemId, reason);
+                });
+                
+               } else if(accessPermission === "Pending"){
+
+                document.getElementById("page-content").style.display = "none";
+
+                var noaccessdiv = document.getElementById("noaccess");
+                const centeredContainer = document.getElementById("centered-content");
+            
+
+            // Create and append the paragraphs with the specified text
+                const paragraph1 = document.createElement("h2");
+                paragraph1.textContent = "Access Denied: This Webpage is for Managers.";
+                centeredContainer.appendChild(paragraph1);
+
+                const paragraph2 = document.createElement("p");
+                paragraph2.textContent = "Your access request has been submitted. Please await approval for access authorization.";
+                centeredContainer.appendChild(paragraph2);
+
+                centeredContainer.style.margin = "0 auto";
+                centeredContainer.style.display = "flex";
+                centeredContainer.style.alignItems = "center";
+                centeredContainer.style.flexWrap = "wrap";
+                centeredContainer.style.width = "53%";
+                centeredContainer.style.lineHeight = "0px";
+                paragraph2.style.color = "#FFA500";
+
+                noaccessdiv.appendChild(centeredContainer);
+
+            //reason box
+
+            var reasonInput = document.createElement('textarea');
+            reasonInput.id = 'reasonInput';
+            reasonInput.required = true;
+            //reasonInput.placeholder = 'Your access request has been submitted. Please await approval for access authorization.';
+            reasonInput.style.marginLeft = '24%';
+            reasonInput.style.marginBottom = '20px';
+            reasonInput.style.borderRadius = '10px';
+            reasonInput.style.width = '100%';
+            reasonInput.style.maxWidth = '52%';
+            reasonInput.style.height = '106px';
+            reasonInput.style.paddingBottom = '74px';
+            reasonInput.style.paddingLeft = '9px';
+            noaccessdiv.appendChild(reasonInput);
+
+            reasonInput.addEventListener('input', function () {
+                var reason = reasonInput.value;
+                updateListItem(itemId, reason);
+            });
+
+            } else {
+
+                   document.getElementById("page-content").style.display = "none";
+
+                   var noaccessdiv = document.getElementById("noaccess");
+                   const centeredContainer = document.getElementById("centered-content");
+               
+
+               // Create and append the paragraphs with the specified text
+                   const paragraph1 = document.createElement("h2");
+                   paragraph1.textContent = "Access Denied: This Webpage is for Managers.";
+                   centeredContainer.appendChild(paragraph1);
+
+                   const paragraph2 = document.createElement("p");
+                   paragraph2.textContent = "Raise an access request if you are a manager and can't access the page.";
+                   centeredContainer.appendChild(paragraph2);
+
+                   const paragraph3 = document.createElement("p");
+                   paragraph3.textContent = "Your request will be reviewed and granted.";
+                   centeredContainer.appendChild(paragraph3);
+
+                   centeredContainer.style.margin = "0 auto";
+                   centeredContainer.style.display = "flex";
+                   centeredContainer.style.alignItems = "center";
+                   centeredContainer.style.flexWrap = "wrap";
+                   centeredContainer.style.width = "53%";
+                   centeredContainer.style.lineHeight = "0px";
+
+                   
+                   noaccessdiv.appendChild(centeredContainer);
+
+               //reason box
+
+               var reasonInput = document.createElement('textarea');
+               reasonInput.id = 'reasonInput';
+               reasonInput.required = true;
+               reasonInput.placeholder = 'Please write the reason for the access';
+               reasonInput.style.marginLeft = '24%';
+               reasonInput.style.marginBottom = '20px';
+               reasonInput.style.borderRadius = '10px';
+               reasonInput.style.width = '100%';
+               reasonInput.style.maxWidth = '52%';
+               reasonInput.style.height = '106px';
+               reasonInput.style.paddingBottom = '74px';
+               reasonInput.style.paddingLeft = '9px';
+               noaccessdiv.appendChild(reasonInput);
+
+               reasonInput.addEventListener('input', function () {
+                   var reason = reasonInput.value;
+                   updateListItem(itemId, reason);
+               });
+
+
+               //request for access button
+
+               var newButton = document.createElement('button');
+               newButton.innerHTML = "Request Access";
+               newButton.style.marginLeft = "67%";
+               newButton.style.padding = "9px";
+               newButton.style.borderRadius = "10px";
+               newButton.style.backgroundColor = "black";
+               newButton.style.color = "#fff";
+               newButton.style.cursor = "pointer";
+               function setButtonColor(isDisabled) {
+                   if (isDisabled) {
+                       newButton.style.backgroundColor = "gray"; // Change the color when disabled
+                   } else {
+                       newButton.style.backgroundColor = "black"; // Change the color when enabled
+                   }
+               }
+               newButton.disabled = true;
+               setButtonColor(true);
+
+               // Add an input event listener to the reasonInput for validation
+               reasonInput.addEventListener('input', function () {
+                   if (reasonInput.checkValidity()) {
+                       // If the input is valid, enable the button
+                       newButton.disabled = false;
+                       setButtonColor(false);
+                   } else {
+                       // If the input is invalid, disable the button
+                       newButton.disabled = false;
+                       setButtonColor(false);
+                   }
+               });
+
+               
+
+               newButton.addEventListener("click", function () {
+                   if (!newButton.disabled) {
+                       Swal.fire({
+                           title: "Request Access",
+                           text: "Do you want to request access?",
+                           icon: "info",
+                           showCancelButton: true,
+                           confirmButtonText: "Yes, request access",
+                           cancelButtonText: "No, cancel",
+                       }).then((result) => {
+                           if (result.isConfirmed) {
+                               if (reasonInput.value.trim() === "") {
+                                   // Display an alert if the reason input is empty
+                                   alert("Please write a reason to access.");
+                               } else {
+                                   // Handle the access request
+                                   console.log("this is called");
+                                   handleAccessRequest(function () {
+                                       // Show a success message using SweetAlert
+                                       Swal.fire("Success", "Your request has been sent successfully!", "success");
+                                   });
+                               }
+                           }
+                       });
+                   } 
+
+               });
+               
+
+                   noaccessdiv.appendChild(newButton);
+
+
+               }
+           }
+
+           } else {
+               
+               document.getElementById("page-content").style.display = "none";
+
+               var noaccessdiv = document.getElementById("noaccess");
+               const centeredContainer = document.getElementById("centered-content");
+               
+
+               // Create and append the paragraphs with the specified text
+               const paragraph1 = document.createElement("h2");
+               paragraph1.textContent = "Access Denied: This Webpage is for Managers.";
+               centeredContainer.appendChild(paragraph1);
+
+               const paragraph2 = document.createElement("p");
+               paragraph2.textContent = "Raise an access request if you are a manager and can't access the page.";
+               centeredContainer.appendChild(paragraph2);
+
+               const paragraph3 = document.createElement("p");
+               paragraph3.textContent = "Your request will be reviewed and granted.";
+               centeredContainer.appendChild(paragraph3);
+               centeredContainer.style.margin = "0 auto";
+               centeredContainer.style.display = "flex";
+               centeredContainer.style.alignItems = "center";
+               centeredContainer.style.flexWrap = "wrap";
+               centeredContainer.style.width = "53%";
+               centeredContainer.style.lineHeight = "0px";
+
+               
+               noaccessdiv.appendChild(centeredContainer);
+
+               var reasonInput = document.createElement('textarea');
+               reasonInput.id = 'reasonInput';
+               reasonInput.required = true;
+               reasonInput.placeholder = 'Please write the reason for the access';
+               reasonInput.style.marginLeft = '24%';
+               reasonInput.style.marginBottom = '20px';
+               reasonInput.style.borderRadius = '10px';
+               reasonInput.style.width = '100%';
+               reasonInput.style.maxWidth = '52%';
+               reasonInput.style.height = '106px';
+               reasonInput.style.paddingBottom = '74px';
+               reasonInput.style.paddingLeft = '9px';
+               noaccessdiv.appendChild(reasonInput);
+
+               
+                       // Create the "Request Access" button
+               var newButton = document.createElement('button');
+               newButton.innerHTML = "Request Access";
+               newButton.style.marginLeft = "66%";
+               newButton.style.padding = "9px";
+               newButton.style.borderRadius = "10px";
+               newButton.style.backgroundColor = "black";
+               newButton.style.color = "#fff";
+               newButton.style.cursor = "pointer";
+               function setButtonColor(isDisabled) {
+                   if (isDisabled) {
+                       newButton.style.backgroundColor = "gray"; // Change the color when disabled
+                   } else {
+                       newButton.style.backgroundColor = "black"; // Change the color when enabled
+                   }
+               }
+               newButton.disabled = true;
+               setButtonColor(true);
+
+               // Add an input event listener to the reasonInput for validation
+               reasonInput.addEventListener('input', function () {
+                   if (reasonInput.checkValidity()) {
+                       // If the input is valid, enable the button
+                       newButton.disabled = false;
+                       setButtonColor(false);
+                   } else {
+                       // If the input is invalid, disable the button
+                       newButton.disabled = true;
+                       setButtonColor(true);
+                   
+                       
+
+                   }
+               });
+
+               
+
+               newButton.addEventListener("click", function () {
+                   if (!newButton.disabled) {
+                       Swal.fire({
+                           title: "Request Access",
+                           text: "Do you want to request access?",
+                           icon: "info",
+                           showCancelButton: true,
+                           confirmButtonText: "Yes, request access",
+                           cancelButtonText: "No, cancel",
+                       }).then((result) => {
+                           if (result.isConfirmed) {
+                               if (reasonInput.value.trim() === "") {
+                                   // Display an alert if the reason input is empty
+                                   alert("Please write a reason to access.");
+                               } else {
+                                   // Handle the access request
+                                   console.log("this is called");
+                                   handleAccessRequest(function () {
+                                       // Show a success message using SweetAlert
+                                       Swal.fire("Success", "Your request has been sent successfully!", "success");
+                                   });
+                               }
+                           }
+                       });
+                   } 
+               });
+
+                noaccessdiv.appendChild(newButton);
+           }
+           
+    
+       },
+       error: function (error) {
+           console.log("Error fetching list data: " + JSON.stringify(error));
+       }
+
+   });
+
+       }
+       // Get the current user's ID from SharePoint    
+ 
+   function handleAccessRequest(callback){
+
+           function checkAndUpdateItem() {
+               
+               const apiBaseUrl = "https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/getByTitle('manager_list')/items";
+               console.log("url is",apiBaseUrl)
+               var currentUserID = _spPageContextInfo.userLoginName;
+               var reason = document.getElementById('reasonInput').value;
+       // Build the filter query to find items associated with the user and matching the title
+
+       const filterQuery = `$filter=(Title eq '${currentUserID}')`; // Replace 'UserField' with your actual user-related field name
+
+
+
+       // Combine the base URL with the filter query
+
+       const filteredApiUrl = `${apiBaseUrl}?${filterQuery}`;
+
+
+
+       console.log("filteredApiUrl is ", filteredApiUrl)
+
+
+
+       // Send a GET request to retrieve user-specific items
+
+       fetch(filteredApiUrl, {
+
+           method: 'GET',
+
+           headers: {
+
+               'Accept': 'application/json;odata=verbose',
+
+           },
+
+       })
+
+           .then(response => {
+
+               if (response.ok) {
+
+                   // Check if an item exists for the user and title
+
+                   response.json().then(data => {
+
+                       if (data.d.results.length > 0) {
+
+                           // Item exists, update it with a PATCH request
+
+                           const itemId = data.d.results[0].Id; // Assuming you have an 'Id' field in your list
+
+                           const updateUrl = `${apiBaseUrl}(${itemId})`;
+                           
+
+                           function updateListItem( itemId) {
+
+                               var context = new SP.ClientContext("https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics");
+
+                               var list = context.get_web().get_lists().getByTitle('manager_list');
+
+                               
+                               var item = list.getItemById(itemId);
+
+                               item.set_item("Request", reason);
+
+                               item.update();
+
+                               context.executeQueryAsync(
+
+                                   function () {
+
+                                       console.log("Item updated successfully.");
+
+                                   },
+
+                                   function (sender, args) {
+
+                                       console.log("Error updating item: " + args.get_message());
+
+                                   }
+
+                               );
+
+                           }
+
+                           updateListItem(itemId)
+
+                       } else {
+
+                           // Item doesn't exist, add a new item with a POST request
+
+                           function createListItem() {
+
+                               var context = new SP.ClientContext("https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics");
+
+                               var list = context.get_web().get_lists().getByTitle('manager_list');
+                               console.log("the list has been called");
+
+                               var itemCreateInfo = new SP.ListItemCreationInformation();
+
+                               var newItem = list.addItem(itemCreateInfo);
+
+
+
+                               newItem.set_item("Title", currentUserID);
+                               newItem.set_item("Request", reason);
+                               newItem.set_item("ApprovalStatus", "Pending");
+
+
+
+                               newItem.update();
+
+                               context.load(newItem);
+
+
+
+                               context.executeQueryAsync(
+
+                                   function () {
+
+                                       console.log("Item created successfully. Item ID: " + newItem.get_id());
+
+                                   },
+
+                                   function (sender, args) {
+
+                                       console.log("Error creating item: " + args.get_message());
+
+                                   }
+
+                               );
+
+                           }
+
+                           createListItem()
+
+                       }
+
+                   });
+
+               } else {
+
+                   console.error('Error fetching user-specific items');
+
+               }
+
+           })
+
+           .catch(error => console.error(error));
+
+       }
+       checkAndUpdateItem();
+       setTimeout(function () {
+       // Simulate a delay for demonstration purposes
+       callback();
+       }, 1000);
+   }
+</script> 
+
+
+<!-- myPieChart -->
+<script>
+    var username = _spPageContextInfo.userLoginName;
+    var viewsData = [];
+    function retrieveUserPageVisits(username) {
+
+       fetch("https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/GetByTitle('User_Visited')/items?$select=Title,Page,View&$filter=Title eq '" + username + "'", {
+          method: "GET",
+          headers: {
+             "Accept": "application/json;odata=verbose"
+          }
+       })
+       .then(response => response.json())
+       .then(data => {
+          var items = data.d.results;
+          var pageViews = {};
+
+          items.forEach((item) => {
+            var page = item.Page;
+            var views = item.View;
+
+            if (page in pageViews) {
+                pageViews[page] += views;
+            } else {
+                pageViews[page] = views;
+            }
+          });
+
+          for (var page in pageViews) {
+            viewsData.push({ "views": pageViews[page], "page": page });
+          }
+
+          createPieChart(viewsData);
+       })
+       .catch(error => {
+          console.error("Error:", error);
+       });
+    }
+
+    function createPieChart(data) {
+        var views = data.map(item => item.views);
+        var pages = data.map(item => item.page);
+        
+        var ctx = document.getElementById('myPieChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: views,
+                    backgroundColor: [
+                        '#7B3C93',
+                        '#E61A23',
+                        '#E02A62',
+                        '#FFD92F',
+                        '#66C2A5',
+                        '#A6D854',
+                    ],
+                    borderColor: '#000000',
+                    borderWidth: 1
+                }],
+                labels: pages
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    }
+    
+    retrieveUserPageVisits(username);
+</script>
+
+
+<script>
+    var ctx = document.getElementById("myChart").getContext('2d');
+
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ["",	"",	"",	"",	"",	"",	"","",	"",""],
+        datasets: [{
+            label: 'Series 1',
+            data: [50,	5,	24,	10,	11,	41,	45,	47,	55, 68], 
+            fill: false,
+            borderColor: '#2196f3', 
+            backgroundColor: '#2196f3', 
+            borderWidth: 1 
+        },
+                  {
+            label: 'Series 2',
+            data: [88,	89,	45,	88,	99,	242,	17,	55,	75, 57], 
+            fill: false,
+            borderColor: '#4CAF50', 
+            backgroundColor: '#4CAF50', 
+            borderWidth: 1 
+        }]
+    },
+    options: {
+      responsive: true, 
+      maintainAspectRatio: false,  
+    }
+});
+</script>
+
+<!-- barChartCanvas -->
+
+<script>
+    // Fetch data from SharePoint list
+    fetch("https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/getByTitle('element_stats')/items", {
+       method: "GET",
+       headers: {
+          "Accept": "application/json;odata=verbose",
+          "Content-Type": "application/json;odata=verbose"
+       }
+    })
+    .then(response => response.json())
+    .then(data => {
+       const items = data.d.results;
+       const clicksByPage = {};
+
+       items.forEach(item => {
+          const pageName = item.Element_Names;
+          const clicks = item.Clicks;
+
+          if (clicksByPage.hasOwnProperty(pageName)) {
+             clicksByPage[pageName] += clicks;
+          } else {
+             clicksByPage[pageName] = clicks;
+          }
+       });
+
+       const labels = Object.keys(clicksByPage);
+       const clicksData = Object.values(clicksByPage);
+
+       const barChartCanvas = document.getElementById('barChartCanvas').getContext('2d');
+       const barChart = new Chart(barChartCanvas, {
+          type: 'bar',
+          data: {
+             labels: labels,
+             datasets: [{
+                label: 'Number of Clicks',
+                data: clicksData,
+                backgroundColor: 'rgba(233, 201, 29, 1)',
+                borderColor: 'rgba(233, 201, 29, 1)',
+                borderWidth: 2
+             }]
+          },
+          options: {
+             responsive: true,
+             scales: {
+                y: {
+                   beginAtZero: true,
+                   title: {
+                      display: true,
+                      text: 'Number of Clicks'
+                   }
+                },
+                x: {
+                   title: {
+                      display: true,
+                      text: 'Element Names'
+                   }
+                }
+             }
+          }
+       });
+    })
+    .catch(error => {
+       console.error("Error:", error);
+    });
+</script>
+
+ <!-- New Trending -->
+ <script>
+    fetch("https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/getByTitle('User_Visited')/items", {
+        method: "GET",
+        headers: {
+            "Accept": "application/json;odata=verbose",
+            "Content-Type": "application/json;odata=verbose"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        let items = data.d.results;
+        let pageViews = {};
+
+        items.forEach(item => {
+            let page = item.Page;
+            let views = item.View;
+
+            //page = page.replace(".aspx", "").replace('PeopleCycle_LCM.aspx', 'PeopleCycle_LCM');
+
+            if (page in pageViews) {
+                pageViews[page] += views;
+            } else {
+                pageViews[page] = views;
+            }
+        });
+
+        let sortedViews = Object.entries(pageViews).sort((a, b) => b[1] - a[1]);
+
+        let top5Pages = sortedViews.slice(0, 4).map(entry => entry[0]);
+        let top5Views = sortedViews.slice(0, 4).map(entry => entry[1]);
+
+        let user_data = '';
+        for (let i = 0; i < top5Pages.length; i++) {
+            user_data += `
+                <p style="color: #FFD92F; margin-left: 20px;">${top5Pages[i]}: ${top5Views[i]}</p>
+            `;
+        }
+
+        $("#trendingGraph").html(user_data);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+</script>
+
+
+ 
+ <!-- end New Trending -->
+ <script>
+    let currentPageUrl = _spPageContextInfo.serverRequestPath;
+    console.log('currentPageUrl end New Trending', currentPageUrl);
+    // https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics
+
+    let currentPageName = currentPageUrl.split('/').pop().replace('.aspx', '');
+
+    console.log('Current Page Name:', currentPageName);
+
+    function CreateItem(id, currentPageName) {
+        var clientContext = new SP.ClientContext();
+
+        var oWeb = clientContext.get_web();
+
+        var oList = oWeb.get_lists().getByTitle("User_Visited");
+
+        var camlQuery = new SP.CamlQuery();
+
+        var oListItemCreationInformation = new SP.ListItemCreationInformation();
+
+        var oListItem = oList.addItem(oListItemCreationInformation);
+        //console.log('Create ITEM formatted data', oListItem);
+        //console.log('Create ITEM formatted data', formattedDate);
+
+        oListItem.set_item("Title", id);
+
+        oListItem.set_item("Page", currentPageName);
+
+        oListItem.set_item("View", 1);
+
+        oListItem.set_item("LastVisited", formattedDate);
+
+        oListItem.set_item("Request", reason);
+
+        oListItem.set_item("ApprovalStatus", approvalStatus);
+
+
+        //oListItem.set_item("LastVisited", formattedDate);
+        //SpendTime
+        // var startTime = new Date(item.get_item("LastVisited"));
+        // var endTime = new Date();
+        //  var spendTime = endTime - startTime;
+
+        // spendTimeInSeconds = Math.floor(spendTime / 1000);
+
+        // oListItem.set_item("SpendTime", spendTimeInSeconds);
+
+        oListItem.update();
+
+        clientContext.load(oListItem);
+
+        clientContext.executeQueryAsync(onsuccess, onfailed);
+      }
+
+      function UpdateItem(id, currentPageUrl, number, reason, approvalStatus) {
+        console.log("Update Fuction: " + number);
+
+        number_visits = number;
+
+        // Create an instance of the current context to return context information
+
+        clientContext = new SP.ClientContext.get_current();
+
+        var oList = clientContext
+          .get_web()
+          .get_lists()
+          .getByTitle("User_Visited");
+
+        var camlQuery = new SP.CamlQuery();
+
+        camlQuery.set_viewXml(
+          '<View><Query><Where><And><Eq><FieldRef Name="Title"/><Value Type="Text">' +
+            id +
+            '</Value></Eq><Eq><FieldRef Name="Page"/><Value Type="Text">' +
+            page +
+            "</Value></Eq></And></Where></Query></View>"
+        );
+
+        console.log(camlQuery);
+
+        this.collListItem = oList.getItems(camlQuery);
+
+        clientContext.load(oList);
+
+        clientContext.load(collListItem);
+
+        clientContext.executeQueryAsync(
+          Function.createDelegate(this, this.onQuerySucceeded1),
+          Function.createDelegate(this, this.onQueryFailed)
+        );
+      }
+
+
+ </script>
+ 
+    <script>
+        // console.log('Treding Page', _spPageContextInfo);
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+    <!-- Username and email login -->
+    <script>
+        // Make a GET request to the SharePoint API endpoint
+        fetch("https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/currentuser", {
+          method: "GET",
+          headers: {
+            "Accept": "application/json;odata=verbose"
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Extract the username and email from the response
+          var username = data.d.Title;
+          const email = data.d.Email;
+      
+          // Update the HTML elements with the fetched data
+          document.getElementById("username").textContent = username;
+          document.getElementById("email").textContent = email;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+      </script>
+      <!-- Website Analytics - users page visits -->
+      <script>
+        // Function to retrieve list items and count total user visits, new users, and clicks this week
+        //var username = _spPageContextInfo.userLoginName;
+        let totalUserVisits = [];
+        let newUsers = 0;
+        let clicksThisWeek = 0;
+        let inactiveUsers = 0;
+        let noOfUsers = 0;
+        let viewOne = 0;
+    
+        function retrieveTotalUserPageVisits(username) {
+            fetch("https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/GetByTitle('User_Visited')/items", {
+                method: "GET",
+                headers: {
+                   "Accept": "application/json;odata=verbose"
+                }
+             })
+            .then(response => response.json())
+            .then(data => {
+                var items = data.d.results;
+                var today = new Date();
+                var oneWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+                // console.log(oneWeekAgo);
+                items.forEach((item) => {
+                    const visitDate = new Date(item.LastVisited);
+                    // console.log('item ', item)
+                    // totalUserVisits++;
+                    totalUserVisits.push(item.Title)
+                    if(item.View===1){
+                        viewOne++;
+                    }
+                    // console.log(totalUserVisits);
+                    
+                    if (visitDate >= oneWeekAgo) {
+                        // console.log('item insites ', item)
+                        clicksThisWeek++;
+                    }
+                });
+
+                //Inactive
+                var oneMonthAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
+                // console.log(oneMonthAgo);
+                items.forEach((item) => {
+                    const visitDate = new Date(item.LastVisited);
+                    // console.log('item ', item)
+                    // totalUserVisits++;
+                    totalUserVisits.push(item.Title)
+                    if(item.View===1){
+                        viewOne++;
+                    }
+                    // console.log(totalUserVisits);
+                    
+                    if (visitDate < oneMonthAgo) {
+                        // console.log('item insites ', item)
+                        inactiveUsers++;
+                    }
+                });
+
+                // console.log('User this week', clicksThisWeek);
+                // console.log("Total USERS", totalUserVisits);
+                noOfUsers = [...new Set(totalUserVisits)].length
+                newUsers = items.length;
+
+                
+                // console.log("No of users", noOfUsers)
+                // console.log('ViewOne', viewOne);
+    
+                updateCardNumbers();
+                //updateCardNumbersData();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+        
+        // to retrieve user information (table)
+       
+        
+
+var fullUrl = "https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/getByTitle('User_Visited')/items";
+
+        $.ajax({
+
+            url: fullUrl,
+
+            type: "GET",
+
+            async: false,
+
+            headers: {
+
+                "accept": "application/json;odata=verbose",
+
+                "content-type": "application/json;odata=verbose",
+
+                "X-RequestDigest": $("#__REQUESTDIGEST").val()
+
+            },
+
+            success: function (data) {
+
+                var items = data.d.results;
+
+                var user_data = '';
+
+                //console.log('Just Designation', items);
+
+                for (i = 0; i < items.length; i++) {
+                    
+                    let designation=items[i].Designation?items[i].Designation:"---"
+                    let display_name = `${_spPageContextInfo.userDisplayName}`;
+
+                    user_data += `<tr>
+                        <td>${items[i].Title}</td>
+                        <td>${designation}</td>
+                        <td>${items[i].Page}</td>
+                        <td>${items[i].View}</td>
+                    </tr>`;
+
+                }
+                
+                $("#userTableData").html(user_data);
+
+                console.log('Display Name', _spPageContextInfo);
+
+            }
+
+        });
+        
+           
+    
+        // Function to update the card numbers on the page
+        function updateCardNumbers() {
+            document.getElementById("totalUsers").textContent = noOfUsers.toLocaleString();
+            document.getElementById("newUsers").textContent = viewOne.toLocaleString();
+            document.getElementById("clicksThisWeek").textContent = clicksThisWeek.toLocaleString();
+            document.getElementById("inactiveUsersId").textContent = inactiveUsers.toLocaleString();
+        }
+    
+        // Call the function to retrieve user page visits and count the numbers
+        retrieveTotalUserPageVisits(username);
+    </script>
+
+    <!-- Designation and profile pic -->
+    <script>
+    
+        function fnGetUserProps() {
+            var UserID = _spPageContextInfo.userId;
+            // var requestUri = _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + UserID + ")";
+    
+            var requestUri = _spPageContextInfo.webAbsoluteUrl + `/_api/Web/Lists/getByTitle ('User Information List')/items?$filter=Id eq ${UserID}`
+    
+            $.ajax({
+    
+                url: requestUri,
+    
+                type: "GET",
+    
+                headers: {
+    
+                    "Accept": "application/json; odata=verbose"
+    
+                },
+    
+                async: false,
+    
+                success: function (data) {
+    
+    
+    
+                    const val = {
+    
+                        name: data.d.results[0].Title,
+    
+                        email: data.d.results[0].UserName,
+    
+                        jobTitle: data.d.results[0].JobTitle,
+    
+                        department: data.d.results[0].Department,
+    
+                        mobile: data.d.results[0].MobilePhone,
+    
+                        office: data.d.results[0].Office,
+    
+                        picture: data.d.results[0].Picture.Url
+    
+                    }
+    
+    
+    
+                    //document.getElementById("user_designation").innerText = `${val.jobTitle}`
+                    
+                    console.log('Department',data.d.results[0].Department);
+    
+    
+                    user = val
+    
+                    // console.log(data.d.results[0].Picture.Url)
+                    console.log("Users Data",user);
+                    let Designation = user.jobTitle;
+                    console.log("Users Data",user.jobTitle);
+    
+                    // alert(userName+' '+userEmail);
+    
+                },
+    
+                error: function (error) {
+    
+                    console.log("fnGetUserProps:: " + error);
+    
+                }
+    
+            });
+    
+        }
+    
+        fnGetUserProps()
+    
+        document.getElementById("profile_photo").src = `/_layouts/15/userphoto.aspx?size=S&username=${_spPageContextInfo.userEmail}`
+    
+        document.getElementById("user_name").innerText = `${_spPageContextInfo.userDisplayName}`
+    
+    
+      
+    
+  
+        
+    </script>
+    
+    <!-- Users Data -  -->
+   
+      <script>
+        
+        // Function to retrieve list items and count total user visits, new users, and clicks this week
+        //var username = _spPageContextInfo.userLoginName;
+        // console.log(_spPageContextInfo);
+        let totalUserDataVisitsData = [];
+        let newUsersData = 0;
+        let clicksThisWeekData = 0;
+        let inactiveUsersData = 0;
+        let noOfUsersData = 0;
+        let viewOneData = 0;
+    
+        function retrieveTotalUserDataVisits(username) {
+            fetch("https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/GetByTitle('User_Visited')/items", {
+                method: "GET",
+                headers: {
+                   "Accept": "application/json;odata=verbose"
+                }
+             })
+            .then(response => response.json())
+            .then(data => {
+                var items = data.d.results;
+                var today = new Date();
+                var oneWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+               // console.log(oneWeekAgo);
+                items.forEach((item) => {
+                    const visitDate = new Date(item.LastVisited);
+                    // console.log('item ', item)
+                    // totalUserVisits++;
+                    totalUserVisits.push(item.Title)
+                    if(item.View===1){
+                        viewOneData++;
+                    }
+                    // console.log(totalUserVisits);
+                    
+                    if (visitDate >= oneWeekAgo) {
+                        //console.log('item insites ', item)
+                        clicksThisWeekData++;
+                    }
+                });
+                //Inactive
+            
+                var oneMonthAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
+                //console.log(oneMonthAgo);
+                items.forEach((item) => {
+                    const visitDate = new Date(item.LastVisited);
+                    // console.log('item ', item)
+                    // totalUserVisits++;
+                    totalUserDataVisitsData.push(item.Title)
+                    if(item.View===1){
+                        viewOneData++;
+                    }
+                    // console.log(totalUserVisits);
+                    
+                    if (visitDate < oneMonthAgo) {
+                        // console.log('item insites ', item)
+                        inactiveUsersData++;
+                    }
+                });
+
+                // console.log('User this week', clicksThisWeekData);
+                // console.log("Total USERS", totalUserDataVisitsData);
+                noOfUsersData = [...new Set(totalUserDataVisitsData)].length
+                newUsersData = items.length;
+
+                
+                // console.log("No of users", noOfUsersData)
+                // console.log('ViewOne', viewOneData);
+    
+                updateCardNumbersData();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+        
+        // to retrieve user information (table) 
+let items;
+var fullUrl = "https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/getByTitle('User_Visited')/items";
+
+        $.ajax({
+
+            url: fullUrl,
+
+            type: "GET",
+
+            async: false,
+
+            headers: {
+
+                "accept": "application/json;odata=verbose",
+
+                "content-type": "application/json;odata=verbose",
+
+                "X-RequestDigest": $("#__REQUESTDIGEST").val()
+
+            },
+
+            success: function (data) {
+
+                items = data.d.results;
+                items.push(data.d.results.Designation);
+                //console.log('items desgnation before', items);
+
+                var user_data = '';
+
+                //  console.log(items);
+
+                for (let i = 0; i < items.length; i++) {
+                    // Get the designation
+                    let designation=items[i].Designation?items[i].Designation:"---"
+                    let display_name = `${_spPageContextInfo.userDisplayName}`;
+
+                    user_data = `<tr>
+                      <td>${items[i].Title}</td>
+                      <td>${designation}</td>
+                      <td>${items[i].Page}</td>
+                      <td>${items[i].View}</td>
+                    </tr>`;
+                  
+                    // Append the table row to the existing data
+                    user_data += user_data;
+                }
+                  
+
+                $("#userTableData").html(user_data);
+
+ 
+
+            }
+
+        });
+           
+        //console.log('Items data', items);
+        // Function to update the card numbers on the page
+        function updateCardNumbersData() {
+            document.getElementById("totalUsers_1").textContent = noOfUsersData.toLocaleString();
+            document.getElementById("newUsers_1").textContent = viewOne.toLocaleString();
+            document.getElementById("clicksThisWeek_1").textContent = clicksThisWeekData.toLocaleString();
+            document.getElementById("inactiveUsersId_1").textContent = inactiveUsersData.toLocaleString();
+        }
+    
+        // Call the function to retrieve user page visits and count the numbers
+        retrieveTotalUserDataVisits(username);
+    </script>  
+    
+</body>
+
+</html
