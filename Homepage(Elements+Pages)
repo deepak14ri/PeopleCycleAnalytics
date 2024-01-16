@@ -1,0 +1,780 @@
+//Page Visits Calculation
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+  type="text/javascript"
+  src="https://ajax.aspnetcdn.com/ajax/4.0/1/MicrosoftAjax.js"
+></script>
+<script type="text/javascript" src="/_layouts/15/sp.runtime.js"></script>
+<script type="text/javascript" src="/_layouts/15/sp.js"></script>
+
+<div class="row bg_graydark" id="dynamicPC_LCM"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", fetchDynamicContent);
+
+  async function fetchDynamicContent() {
+    try {
+      let apiEndpoint =
+        "https://anheuserbuschinbev.sharepoint.com/sites/zone-europe-people-Talent-Learning/_api/web/lists/getbytitle('Dynamic_Contents')/items?$filter=Category eq 'home_section1'";
+      let response = await fetch(apiEndpoint, {
+        method: "GET",
+        headers: { Accept: "application/json;odata=verbose" },
+      });
+
+      if (response.ok) {
+        let data = await response.json();
+        //console.log("data of dynamicPC_LCM ", data);
+        renderDynamicContent(data.d.results);
+      } else {
+        throw new Error("Error fetching Dynamic_Contents data");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function renderDynamicContent(contents) {
+    let dynamicPC_LCM = document.getElementById(
+      "dynamicPC_LCM"
+    );
+    //console.log("Contents length ", contents);
+
+    let user_data = "";
+    for (let i = 0; i < contents.length; i++) {
+      user_data += `<div class="col-md-4">
+                      <div class="card">
+                        <a href="${contents[i].PageLinks}">
+                          <div class="${contents[i].Class}"></div>
+                          <h4>${contents[i].Title}</h4>
+                        </a>
+                      </div>
+                    </div>`;
+    }
+    $("#dynamicPC_LCM").html(user_data);
+  }
+
+  fetchDynamicContent();
+</script>
+
+<!-- NewLcm -->
+<!-- Website Analytics - users page visits -->
+<script>
+  // Function to retrieve list items and count total user visits, new users, and clicks this week
+  var username = _spPageContextInfo.userLoginName;
+  let totalUserVisits = [];
+  let newUsers = 0;
+  let clicksThisWeek = 0;
+  let inactiveUsers = 0;
+  let noOfUsers = 0;
+  let viewOne = 0;
+
+  function retrieveTotalUserPageVisits(username) {
+    fetch(
+      _spPageContextInfo.webAbsoluteUrl +
+        "/_api/web/lists/GetByTitle('User_Visited')/items",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json;odata=verbose",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        var items = data.d.results;
+        var today = new Date();
+        var oneWeekAgo = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate() - 7
+        );
+        // console.log(oneWeekAgo);
+        items.forEach((item) => {
+          const visitDate = new Date(item.LastVisited);
+          // console.log('item ', item)
+          // totalUserVisits++;
+          totalUserVisits.push(item.Title);
+          if (item.View === 1) {
+            viewOne++;
+          }
+          // console.log(totalUserVisits);
+
+          if (visitDate >= oneWeekAgo) {
+            // console.log('item insites ', item)
+            clicksThisWeek++;
+          }
+        });
+
+        //Inactive
+        var oneMonthAgo = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate() - 30
+        );
+        // console.log(oneMonthAgo);
+        items.forEach((item) => {
+          const visitDate = new Date(item.LastVisited);
+          // console.log('item ', item)
+          // totalUserVisits++;
+          totalUserVisits.push(item.Title);
+          if (item.View === 1) {
+            viewOne++;
+          }
+          // console.log(totalUserVisits);
+
+          if (visitDate < oneMonthAgo) {
+            // console.log('item insites ', item)
+            inactiveUsers++;
+          }
+        });
+
+        // console.log('User this week', clicksThisWeek);
+        // console.log("Total USERS", totalUserVisits);
+        noOfUsers = [...new Set(totalUserVisits)].length;
+        newUsers = items.length;
+
+        // console.log("No of users", noOfUsers)
+        // console.log('ViewOne', viewOne);
+
+        updateCardNumbers();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
+  // to retrieve user information (table)
+
+  var fullUrl =
+    _spPageContextInfo.webAbsoluteUrl +
+    "/_api/web/lists/getByTitle('User_Visited')/items";
+
+  $.ajax({
+    url: fullUrl,
+
+    type: "GET",
+
+    async: false,
+
+    headers: {
+      accept: "application/json;odata=verbose",
+
+      "content-type": "application/json;odata=verbose",
+
+      "X-RequestDigest": $("#__REQUESTDIGEST").val(),
+    },
+
+    success: function (data) {
+      var items = data.d.results;
+
+      var user_data = "";
+
+      // console.log(items);
+
+      for (i = 0; i < items.length; i++) {
+        var designation = items[i].Designation ? items[i].Designation : "---";
+        // console.log(items[i].Title);
+        let display_name = `${_spPageContextInfo.userDisplayName}`;
+        user_data += `<tr>
+                        <td>${items[i].Title}</td>
+                        <td>${designation}</td>
+                        <td>${items[i].View}</td>
+                    </tr>`;
+      }
+
+      $("#userTableData").html(user_data);
+
+      //console.log("Display Name", _spPageContextInfo);
+    },
+  });
+
+  // Function to update the card numbers on the page
+  function updateCardNumbers() {
+    document.getElementById("totalUsers").textContent =
+      noOfUsers.toLocaleString();
+    document.getElementById("newUsers").textContent = viewOne.toLocaleString();
+    document.getElementById("clicksThisWeek").textContent =
+      clicksThisWeek.toLocaleString();
+    document.getElementById("inactiveUsersId").textContent =
+      inactiveUsers.toLocaleString();
+  }
+
+  // Call the function to retrieve user page visits and count the numbers
+  retrieveTotalUserPageVisits(username);
+</script>
+
+<!-- Designation and profile pic -->
+<script>
+  var Designation;
+  function fnGetUserProps() {
+    var UserID = _spPageContextInfo.userId;
+    // var requestUri = _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + UserID + ")";
+
+    var requestUri =
+      _spPageContextInfo.webAbsoluteUrl +
+      `/_api/Web/Lists/getByTitle ('User Information List')/items?$filter=Id eq ${UserID}`;
+
+    $.ajax({
+      url: requestUri,
+
+      type: "GET",
+
+      headers: {
+        Accept: "application/json; odata=verbose",
+      },
+
+      async: false,
+
+      success: function (data) {
+        const val = {
+          name: data.d.results[0].Title,
+
+          email: data.d.results[0].UserName,
+
+          jobTitle: data.d.results[0].JobTitle,
+
+          department: data.d.results[0].Department,
+
+          mobile: data.d.results[0].MobilePhone,
+
+          office: data.d.results[0].Office,
+
+          picture: data.d.results[0].Picture.Url,
+        };
+
+        //document.getElementById("user_designation").innerText = `${val.jobTitle}`
+
+        //console.log("Department", data.d.results[0].Department);
+
+        user = val;
+
+        // console.log(data.d.results[0].Picture.Url)
+        //console.log("Users Data", user);
+        Designation = user.jobTitle;
+        console.log("Users Data", user.jobTitle);
+
+        // alert(userName+' '+userEmail);
+      },
+
+      error: function (error) {
+        console.log("fnGetUserProps:: " + error);
+      },
+    });
+  }
+
+  fnGetUserProps();
+
+  document.getElementById(
+    "profile_photo"
+  ).src = `/_layouts/15/userphoto.aspx?size=S&username=${_spPageContextInfo.userEmail}`;
+
+  document.getElementById(
+    "user_name"
+  ).innerText = `${_spPageContextInfo.userDisplayName}`;
+</script>
+
+//Elements Clicks Calculation
+<!-- FAQ -->
+
+<style>
+  .chat_bg{
+      max-width: 100%;
+  }
+  .livechat_btn{
+  margin: 0 auto;
+    display: block;
+    color: #000;
+    background: linear-gradient(225deg, #E2BE14 14.64%, #E2BE14 17.47%, #F5E003 47.17%, #F5E003 68.39%, #F5E003 79%);
+    padding: 7px 32px;
+    border-radius: 10px;
+    text-decoration: none;
+  }
+.modal-content{
+    background-color:#fff !important;
+}
+  </style>
+  <footer class="p-top-50">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-3">
+ <div class="faq_highlight" style="background-color: #000 !important;">
+                  <h4 class="white sub_heading">FAQ
+                  </h4>
+                  <div id="dynamicPC_faq"></div>
+    </div>              
+
+              </div>
+  
+                      <div class="col-md-3">
+                          <h4 class="white sub_heading">EUROPE ZONE PORTAL
+                          </h4>
+                          <ul>
+                              <li><a href="https://anheuserbuschinbev.sharepoint.com/sites/zone-europe-intranet-governance">Portal FAQ</a></li>
+                              <li><a href="https://anheuserbuschinbev.sharepoint.com/sites/zone-europe-intranet-governance/SitePages/New-Site-Procedure.aspx?web=1">Request you own Portal Page</a></li>
+                              <li><a href="mailto:Geoff.Fisher2@ab-inbev.com"> Contact Internal Comms</a></li>
+                          </ul>
+                      </div>
+                      <div class="col-md-3">
+                          <h4 class="white sub_heading">ABI WEBSITES
+                          </h4>
+                          <ul>
+                              <li><a href="https://www.ab-inbev.com/">Corporate site</a></li>
+                              <li><a href="http://www.tapintoyourbeer.com/"> Tap Into Your Beer</a></li>
+  
+                          </ul>
+                      </div>
+                      <div class="col-md-3">
+                          <h4 class="white sub_heading">POLICIES</h4>
+                          <ul>
+                              <li><a href="https://anheuserbuschinbev.sharepoint.com/sites/zone-europe-legal/SitePages/Home.aspx">Legal </a></li>
+                              <li><a href="https://anheuserbuschinbev.sharepoint.com/sites/zone-europe-people"> People (via local people pages)</a></li>
+                              <li><a href="https://anheuserbuschinbev.sharepoint.com/sites/zone-europe/SitePages/Privacy-Policy.aspx">Privacy Policy</a></li>
+                              <li><a href="https://anheuserbuschinbev.sharepoint.com/sites/zone-europe-crisis-management"> Crisis Management</a></li>
+                          </ul>
+                      </div>
+  
+          </div>
+  
+          <div class="line_devide mt-4"></div>
+          <div class="row">
+              <div class="col-md-10">
+                  <p class="copyright mt-3">All Rights Reserved Copyright © 2023, People Cycle</p>
+              </div>
+              <div class="col-md-2">
+                  <ul class="bottom_links pull-right mt-2">
+                    
+                      <li>
+                          <a href="https://anheuserbuschinbev.sharepoint.com/sites/zone-europe/SitePages/Privacy-Policy.aspx">Privacy & Policy</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      </div>
+  </footer>
+  
+  <!-- Button trigger modal -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+  <div class="modal-content" style="background-color:#fff !important;">
+    <div class="modal-header">
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+  <img class="chat_bg" src="https://anheuserbuschinbev.sharepoint.com/:i:/r/sites/zone-europe-people-Talent-Learning/Site/images/chat_bg.png?csf=1&web=1&e=wqzNWs">
+    </div>
+  <div class="modal-footer">
+     <a class="livechat_btn" href="https://click.ab-inbev.com/s/" target="_blank">Click Live Chat</a>
+  </div>
+  </div>
+  </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+   <!-- dynamicContent -->
+  
+   <script>
+      document.addEventListener("DOMContentLoaded", fetchDynamicContent);
+    
+      async function fetchDynamicContent() {
+        try {
+          let apiEndpoint =
+            "https://anheuserbuschinbev.sharepoint.com/sites/zone-europe-people-Talent-Learning/_api/web/lists/getbytitle('Dynamic_Contents')/items?$filter=Category eq 'home_section3'";
+          let response = await fetch(apiEndpoint, {
+            method: "GET",
+            headers: { Accept: "application/json;odata=verbose" },
+          });
+    
+          if (response.ok) {
+            let data = await response.json();
+            //console.log("data of dynamicPC_faq ", data);
+            renderDynamicContent(data.d.results);
+          } else {
+            throw new Error("Error fetching Dynamic_Contents data");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    
+      function renderDynamicContent(contents) {
+        let dynamicPC_faq = document.getElementById(
+          "dynamicPC_faq"
+        );
+        //console.log("Contents length pc_sec3", contents);
+    
+        let user_data = "";
+        let faq = "<ul>";
+        let faqList = "";
+        for (let i = 0; i < contents.length; i++) {
+          if (i < 3) {
+            faqList += `<li><a href="${contents[i].PageLinks}">${contents[i].Title}</a></li>`;
+          } else {
+            user_data += `<div class="${contents[i].Class}">
+                            <button type="button" class="btn btn_chat" data-bs-toggle="modal" data-bs-target="#exampleModal" data-interception="off" target="_blank" onclick="checkAndUpdateItem('LiveChat-Homepage')">
+                              ${contents[i].Title}
+                            </button>
+                          </div>`;
+          }
+        }
+        faq += faqList + "</ul>";
+        $("#dynamicPC_faq").html(faq + user_data);
+      }
+    
+      fetchDynamicContent();
+    </script>
+    <script>
+      function checkAndUpdateItem(elementName) {
+        const username = _spPageContextInfo.userLoginName;
+        const apiBaseUrl = "https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics/_api/web/lists/getByTitle('element_stats')/items";
+        console.log('Current Username ', username);
+    
+        const button = elementName;
+    
+        const filterQuery = `$filter=(Title eq '${username}' and Element_Names eq '${button}')`;
+    
+        const filteredApiUrl = `${apiBaseUrl}?${filterQuery}`;
+    
+        console.log("filteredApiUrl is ", filteredApiUrl);
+    
+        fetch(filteredApiUrl, {
+          method: "GET",
+    
+          headers: {
+            Accept: "application/json;odata=verbose",
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              response.json().then((data) => {
+                if (data.d.results.length > 0) {
+                  const itemId = data.d.results[0].Id; // Assuming you have an 'Id' field in your list
+    
+                  const updateUrl = `${apiBaseUrl}(${itemId})`;
+    
+                  function updateListItem(itemId) {
+                    var context = new SP.ClientContext(
+                      "https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics"
+                    );
+    
+                    var list = context
+                      .get_web()
+                      .get_lists()
+                      .getByTitle("element_stats");
+    
+                    var item = list.getItemById(itemId);
+    
+                    item.set_item("Clicks", data.d.results[0].Clicks + 1);
+    
+                    item.update();
+    
+                    context.executeQueryAsync(
+                      function () {
+                        console.log("Item updated successfully.");
+                      },
+    
+                      function (sender, args) {
+                        console.log("Error updating item: " + args.get_message());
+                      }
+                    );
+                  }
+    
+                  updateListItem(itemId);
+                } else {
+                  function createListItem() {
+                    var context = new SP.ClientContext(
+                      "https://anheuserbuschinbev.sharepoint.com/sites/PeopleCycleAnalytics"
+                    );
+    
+                    var list = context
+                      .get_web()
+                      .get_lists()
+                      .getByTitle("element_stats");
+    
+                    var itemCreateInfo = new SP.ListItemCreationInformation();
+    
+                    var newItem = list.addItem(itemCreateInfo);
+    
+                    newItem.set_item("Title", username);
+    
+                    newItem.set_item("Clicks", 1);
+                    newItem.set_item("Element_Names", button);
+    
+                    newItem.update();
+    
+                    context.load(newItem);
+    
+                    context.executeQueryAsync(
+                      function () {
+                        console.log(
+                          "Item created successfully. Item ID: " + newItem.get_id()
+                        );
+                      },
+    
+                      function (sender, args) {
+                        console.log("Error creating item: " + args.get_message());
+                      }
+                    );
+                  }
+    
+                  createListItem();
+                }
+              });
+            } else {
+              console.error("Error fetching user-specific items");
+            }
+          })
+    
+          .catch((error) => console.error(error));
+      }
+    </script>
+
+          <script language="javascript" type="text/javascript">
+              var currentDate = new Date();
+        
+              var ISTOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+        
+              // Adjust the date to IST
+        
+              var ISTDate = new Date(currentDate.getTime() + ISTOffset);
+        
+              // Format the date as "YYYY-MM-DD HH:MM:SS"
+        
+              var formattedDate = ISTDate.toISOString()
+                .replace(/T/, " ")
+                .replace(/\..+/, "");
+        
+              //console.log("Formatted IST Date:", formattedDate);
+        
+              function UpdateItem(id, page, number) {
+                //console.log("Update Fuction: " + number);
+        
+                number_visits = number;
+        
+                // Create an instance of the current context to return context information
+        
+                clientContext = new SP.ClientContext.get_current();
+        
+                var oList = clientContext
+                  .get_web()
+                  .get_lists()
+                  .getByTitle("User_Visited");
+        
+                var camlQuery = new SP.CamlQuery();
+        
+                camlQuery.set_viewXml(
+                  '<View><Query><Where><And><Eq><FieldRef Name="Title"/><Value Type="Text">' +
+                    id +
+                    '</Value></Eq><Eq><FieldRef Name="Page"/><Value Type="Text">' +
+                    page +
+                    "</Value></Eq></And></Where></Query></View>"
+                );
+        
+                //console.log(camlQuery);
+        
+                this.collListItem = oList.getItems(camlQuery);
+        
+                clientContext.load(oList);
+        
+                clientContext.load(collListItem);
+        
+                clientContext.executeQueryAsync(
+                  Function.createDelegate(this, this.onQuerySucceeded1),
+                  Function.createDelegate(this, this.onQueryFailed)
+                );
+              }
+        
+              function onQuerySucceeded1() {
+                //console.log("Success Function: " + number_visits);
+        
+                var listItemEnumerator = collListItem.getEnumerator();
+        
+                while (listItemEnumerator.moveNext()) {
+                  var item = listItemEnumerator.get_current();
+        
+                  item.set_item("View", number_visits);
+        
+                  //Commits changed properties of the list item
+        
+                  item.update();
+                }
+        
+                clientContext.executeQueryAsync(
+                  Function.createDelegate(this, this.onUpdateSucceeded),
+                  Function.createDelegate(this, this.onQueryFailed)
+                );
+              }
+        
+              function onUpdateSucceeded() {
+                console.log("Succeeded");
+              }
+        
+              function onQueryFailed(sender, args) {
+                console.log(
+                  "Request failed. " + args.get_message() + "\n" + args.get_stackTrace()
+                );
+              }
+        
+              function get_streak() {
+                var currentURL = window.location.href;
+                var pagename = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+        
+                console.log(pagename);
+                pagename = pagename.split(".");
+                pagename = pagename[0];
+                var loginname = _spPageContextInfo.userLoginName;
+        
+                var fullUrl =
+                  _spPageContextInfo.webAbsoluteUrl +
+                  "/_api/web/lists/getByTitle('User_Visited')/items?$filter=((Title eq '" +
+                  loginname +
+                  "' ) and (Page eq '" +
+                  pagename +
+                  "') )";
+        
+                $.ajax({
+                  url: fullUrl,
+        
+                  type: "GET",
+        
+                  async: false,
+        
+                  headers: {
+                    accept: "application/json;odata=verbose",
+        
+                    "content-type": "application/json;odata=verbose",
+        
+                    "X-RequestDigest": $("#__REQUESTDIGEST").val(),
+                  },
+        
+                  success: function (data) {
+                    var items = data.d.results;
+        
+                    //console.log("item is ", items);
+        
+                    if (items.length === 0) {
+                      CreateItem(loginname, pagename);
+                    } else {
+                      //console.log("View" + items[0]["View"]);
+        
+                      var number = items[0]["View"] + 1;
+        
+                      UpdateItem(loginname, pagename, number);
+                    }
+                  },
+                });
+              }
+        
+              function CreateItem(id, page) {
+                var clientContext = new SP.ClientContext();
+        
+                var oWeb = clientContext.get_web();
+        
+                var oList = oWeb.get_lists().getByTitle("User_Visited");
+        
+                var camlQuery = new SP.CamlQuery();
+        
+                var oListItemCreationInformation = new SP.ListItemCreationInformation();
+        
+                var oListItem = oList.addItem(oListItemCreationInformation);
+        
+                oListItem.set_item("Title", id);
+        
+                oListItem.set_item("Page", page);
+        
+                oListItem.set_item("View", 1);
+        
+                oListItem.set_item("LastVisited", formattedDate);
+        
+                oListItem.update();
+        
+                clientContext.load(oListItem);
+        
+                clientContext.executeQueryAsync(onsuccess, onfailed);
+              }
+        
+              function onsuccess() {
+                console.log("Success");
+              }
+        
+              function onfailed(sender, args) {
+                console.log(
+                  "Failed" + args.get_message() + "\n" + args.get_stackTrace()
+                );
+              }
+        
+              get_streak();
+            </script>
+
+<!-- Designation and profile pic -->
+<script>
+  var Designation;
+  function fnGetUserProps() {
+    var UserID = _spPageContextInfo.userId;
+    // var requestUri = _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + UserID + ")";
+
+    var requestUri =
+      _spPageContextInfo.webAbsoluteUrl +
+      `/_api/Web/Lists/getByTitle ('User Information List')/items?$filter=Id eq ${UserID}`;
+
+    $.ajax({
+      url: requestUri,
+
+      type: "GET",
+
+      headers: {
+        Accept: "application/json; odata=verbose",
+      },
+
+      async: false,
+
+      success: function (data) {
+        const val = {
+          name: data.d.results[0].Title,
+
+          email: data.d.results[0].UserName,
+
+          jobTitle: data.d.results[0].JobTitle,
+
+          department: data.d.results[0].Department,
+
+          mobile: data.d.results[0].MobilePhone,
+
+          office: data.d.results[0].Office,
+
+          picture: data.d.results[0].Picture.Url,
+        };
+
+        //document.getElementById("user_designation").innerText = `${val.jobTitle}`
+
+        //console.log("Department", data.d.results[0].Department);
+
+        user = val;
+        // console.log(data.d.results[0].Picture.Url)
+        //console.log("Users Data", user);
+        Designation = user.jobTitle;
+       // console.log("471 Users Data Designation", user.jobTitle);
+
+        // alert(userName+' '+userEmail);
+      },
+
+      error: function (error) {
+        console.log("fnGetUserProps:: " + error);
+      },
+    });
+  }
+
+  fnGetUserProps();
+
+  document.getElementById(
+    "profile_photo"
+  ).src = `/_layouts/15/userphoto.aspx?size=S&username=${_spPageContextInfo.userEmail}`;
+
+  document.getElementById(
+    "user_name"
+  ).innerText = `${_spPageContextInfo.userDisplayName}`;
+</script>
+
